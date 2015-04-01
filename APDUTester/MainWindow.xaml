@@ -1,0 +1,42 @@
+﻿<Window x:Class="APDUTester.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="clr-namespace:APDUTester.Converters"
+        Title="MainWindow" Height="200" Width="525">
+    <Window.Resources>
+        <conv:HexByteConverter x:Key="HexByteConverter"/>
+        <conv:HexByteArrayConverter x:Key="HexByteArrayConverter" />
+    </Window.Resources>
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal">
+            <Label>Card reader:</Label>
+            <ComboBox x:Name="cbReaders" Width="200px" IsEditable="False" SelectedIndex="0"/>
+            <Button x:Name="btRefreshReaders" Click="btRefreshReaders_Click">Refresh</Button>
+        </StackPanel>
+        <Grid Margin="0 0 0 10" x:Name="grRequestForm">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="lbCLA" Grid.Column="0" Grid.Row="0">CLA</Label>
+            <TextBox x:Name="tbCLA" Grid.Column="0" Grid.Row="1" MaxLength="2" Text="{Binding Path=CLA, ValidatesOnExceptions=True, Converter={StaticResource HexByteConverter}, Mode=OneWayToSource}"  />
+            <Label x:Name="lbINS" Grid.Column="1" Grid.Row="0">INS</Label>
+            <TextBox x:Name="tbINS" Grid.Column="1" Grid.Row="1" MaxLength="2" Text="{Binding Path=INS, ValidatesOnExceptions=True, Converter={StaticResource HexByteConverter}, Mode=OneWayToSource }" />
+            <Label x:Name="lbP1" Grid.Column="2" Grid.Row="0">P1</Label>
+            <TextBox x:Name="tbP1" Grid.Column="2" Grid.Row="1" MaxLength="2" Text="{Binding Path=P1, ValidatesOnExceptions=True, Converter={StaticResource HexByteConverter}, Mode=OneWayToSource }" />
+            <Label x:Name="lbP2" Grid.Column="3" Grid.Row="0">P2</Label>
+            <TextBox x:Name="tbP2" Grid.Column="3" Grid.Row="1" MaxLength="2" Text="{Binding Path=P2, ValidatesOnExceptions=True, Converter={StaticResource HexByteConverter}, Mode=OneWayToSource }"/>
+            <Label x:Name="lbData" Grid.Column="4" Grid.Row="0">Data</Label>
+            <TextBox x:Name="tbData" Grid.Column="4" Grid.Row="1" Text="{Binding Path=Data, ValidatesOnExceptions=True, Converter={StaticResource HexByteArrayConverter}, Mode=OneWayToSource }" />
+        </Grid>
+        <Button x:Name="btSend" Width="50" HorizontalAlignment="Left" Click="btSend_Click" Margin="0 0 0 5">Send</Button>
+        <TextBlock x:Name="tblResponse" Height="40"/>  
+    </StackPanel>
+</Window>
