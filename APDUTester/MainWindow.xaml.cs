@@ -57,11 +57,18 @@ namespace APDUTester
             return Convert.ToString(b, 16);
         }
 
-               private void btSend_Click(object sender, RoutedEventArgs e)
+        private void btSend_Click(object sender, RoutedEventArgs e)
         {
             btSend.IsEnabled = false;
-            this.tblResponse.Text = "";     
-       
+            this.tblResponse.Text = "";
+
+            if (this.cbReaders.SelectedItem == null)
+            {
+                tblResponse.Text = "Error\n" + "Reader is not selected";
+                btSend.IsEnabled = true;
+                return;
+            }
+
             if (!IsValid(this.grRequestForm))
             {
                 tblResponse.Text = "Error\n" + "Fill the request form";
@@ -72,14 +79,18 @@ namespace APDUTester
             var reader = this.cbReaders.SelectedItem.ToString();
             new Thread(() =>
             {
-                string responseText; 
+                string responseText;
                 try
                 {
-                   
+
                     var response = controller.SendAPDU(reader, Request);
-                    var responseMessage = String.Format("Data: {0} \n" +
-                        "SW1: {1}; SW2: {2}", ToHexString(response.Data), ToHex(response.SW1), ToHex(response.SW2));
-                    responseText = responseMessage;
+                    StringBuilder builder = new StringBuilder();
+                    builder.AppendLine(String.Format("Data: {0}", ToHexString(response.Data)));
+                    builder.AppendLine(String.Format("SW1: {0}; SW2: {1}", ToHex(response.SW1), ToHex(response.SW2)));
+                    builder.AppendLine();
+                    builder.AppendLine("Reader Info:");
+                    builder.AppendLine(ReaderInfo(reader));
+                    responseText = builder.ToString();
                 }
                 catch (Exception ex)
                 {
@@ -110,6 +121,16 @@ namespace APDUTester
             LogicalTreeHelper.GetChildren(obj)
             .OfType<DependencyObject>()
             .All(IsValid);
+        }
+
+        private string ReaderInfo(string reader)
+        {
+            string message;
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine(String.Format("Name: {0}", reader));
+            builder.AppendLine(String.Format("Port: {0}", controller.GetReaderPort(reader)));
+            message = builder.ToString();
+            return message;
         }
     }
 }

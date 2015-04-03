@@ -10,5 +10,6 @@ namespace APDUTester
     {
         string[] GetReaders();
         APDUResponse SendAPDU(string reader, APDURequest request);
+        string GetReaderPort(string reader);
     }
 }

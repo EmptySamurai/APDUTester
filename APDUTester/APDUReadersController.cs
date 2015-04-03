@@ -66,5 +66,24 @@ namespace APDUTester
                 };                
             }
         }
+
+        public string GetReaderPort(string reader)
+        {
+            using (var context = new SCardContext())
+            {
+                context.Establish(SCardScope.System);
+                var scReader = new SCardReader(context);
+                SCardError error = scReader.Connect(reader, SCardShareMode.Shared, SCardProtocol.Any);
+                byte[] port;
+                error = scReader.GetAttrib(SCardAttribute.ChannelId, out port);
+                context.Release();
+                StringBuilder builder = new StringBuilder();
+                foreach (var b in port)
+                {
+                    builder.Append(Convert.ToString(b, 16));
+                }
+                return builder.ToString();
+            }
+        }
     }
 }

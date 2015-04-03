@@ -2,10 +2,14 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:conv="clr-namespace:APDUTester.Converters"
-        Title="MainWindow" Height="200" Width="525">
+        Title="APDUTester" Height="230" Width="525">
     <Window.Resources>
         <conv:HexByteConverter x:Key="HexByteConverter"/>
         <conv:HexByteArrayConverter x:Key="HexByteArrayConverter" />
+        <Style x:Key="textBlockBorder" TargetType="{x:Type Border}">
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="Black" />
+        </Style>
     </Window.Resources>
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
@@ -37,6 +41,11 @@
             <TextBox x:Name="tbData" Grid.Column="4" Grid.Row="1" Text="{Binding Path=Data, ValidatesOnExceptions=True, Converter={StaticResource HexByteArrayConverter}, Mode=OneWayToSource }" />
         </Grid>
         <Button x:Name="btSend" Width="50" HorizontalAlignment="Left" Click="btSend_Click" Margin="0 0 0 5">Send</Button>
-        <TextBlock x:Name="tblResponse" Height="40"/>  
+        <Border Style="{StaticResource textBlockBorder}">
+            <ScrollViewer Height="80">
+                <TextBlock x:Name="tblResponse" ScrollViewer.VerticalScrollBarVisibility="Auto"
+         ScrollViewer.CanContentScroll="True" />
+            </ScrollViewer>
+        </Border>
     </StackPanel>
 </Window>
